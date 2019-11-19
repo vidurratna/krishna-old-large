@@ -19,10 +19,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::group([
-    'prefex'        => '/{chapter}',
-    'middleware'    => \App\Http\Middleware\IdentifyChapter::class,
-    'as'            => 'chapter:',
-], function () {
-     Route::apiResource('posts', 'PostController');
-    // Route::apiResource('events', 'EventController');
+    'prefix' => '/v1'
+    ],function() {
+
+        Route::group([
+            'prefex'        => '/{chapter}',
+            'middleware'    => \App\Http\Middleware\IdentifyChapter::class,
+            'as'            => 'chapter:',
+        ], function () {
+
+            Route::apiResource('posts', 'Api\PostController');
+            // Route::apiResource('events', 'EventController');
+
+        });
+
+
+        Route::group([
+            'prefix' => '/user'
+            ],function() {
+                Route::post('/register', 'Api\AuthController@register');
+                Route::post('/login', 'Api\AuthController@login');
+        });
 });
