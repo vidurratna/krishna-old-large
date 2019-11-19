@@ -16,3 +16,16 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::group([
+    'prefex'        => '/{chapter}',
+    'middleware'    => \App\Http\Middleware\IdentifyChapter::class,
+    'as'            => 'chapter:',
+], function () {
+    // Route::apiResource('posts', 'PostController');
+    // Route::apiResource('events', 'EventController');
+    Route::get('/worked', function() {
+        return response(['message'=>'Welcome to Krishna, ISSO Hamilton']);
+    });
+});
