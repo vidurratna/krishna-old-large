@@ -23,9 +23,6 @@ Route::group([
     'middleware'    => \App\Http\Middleware\IdentifyChapter::class,
     'as'            => 'chapter:',
 ], function () {
-    // Route::apiResource('posts', 'PostController');
+     Route::apiResource('posts', 'PostController');
     // Route::apiResource('events', 'EventController');
-    Route::get('/worked', function() {
-        return response(['message'=>'Welcome to Krishna, ISSO Hamilton']);
-    });
 });
