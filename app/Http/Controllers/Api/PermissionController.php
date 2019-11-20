@@ -7,7 +7,6 @@ use App\Http\Requests\Permission\CreateRequest;
 use App\Permission;
 use App\Role;
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +17,7 @@ class PermissionController extends Controller
     // {
     //     return $this->middleware('auth:api');
     // }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,6 +25,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        //$this->authorize('krishna.permission.index');
+
         return response(['data'=>Permission::all()]);
     }
 
@@ -36,6 +38,9 @@ class PermissionController extends Controller
      */
     public function store(CreateRequest $request)
     {
+
+        //$this->authorize('krishna.permission.store');
+
         $permission = Permission::create($request->all());
 
         return response([
@@ -52,6 +57,8 @@ class PermissionController extends Controller
      */
     public function show($permission)
     {
+        //$this->authorize('krishna.permission.show');
+
         $permission = Permission::find($permission);
 
         if($permission)
@@ -73,6 +80,8 @@ class PermissionController extends Controller
      */
     public function update($permission)
     {
+        //$this->authorize('krishna.permission.update');
+
         $permission = Permission::find($permission);
 
         if($permission)
@@ -102,6 +111,8 @@ class PermissionController extends Controller
      */
     public function destroy($permission)
     {
+        //$this->authorize('krishna.permission.destroy');
+
         $permission = Permission::find($permission);
 
         if($permission)
@@ -135,6 +146,8 @@ class PermissionController extends Controller
 
     public function asignRole(Permission $permission, Role $role)
     {
+        //$this->authorize('krishna.permission.asign');
+
         DB::table('role_permissions')->insert([
             ['role_id' => $role->id, 'permission_id' => $permission->id]
         ]);

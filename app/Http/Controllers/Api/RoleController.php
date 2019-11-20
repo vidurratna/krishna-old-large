@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\CreateRequest;
 use App\Role;
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +23,8 @@ class RoleController extends Controller
      */
     public function index()
     {
+        //$this->authorize('krishna.role.index');
+
         return response(['data'=>Role::all()]);
     }
 
@@ -35,6 +36,8 @@ class RoleController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        //$this->authorize('krishna.role.store');
+
         $role = Role::create($request->all());
 
         return response([
@@ -52,6 +55,8 @@ class RoleController extends Controller
      */
     public function show($role)
     {
+        //$this->authorize('krishna.role.show');
+
         $role = Role::find($role);
 
         if($role)
@@ -74,6 +79,7 @@ class RoleController extends Controller
      */
     public function update($role)
     {
+        //$this->authorize('krishna.role.update');
 
         $role = Role::find($role);
 
@@ -105,6 +111,9 @@ class RoleController extends Controller
      */
     public function destroy($role)
     {
+
+        //$this->authorize('krishna.role.destroy');
+
         $role = Role::find($role);
 
         if($role)
@@ -137,11 +146,10 @@ class RoleController extends Controller
         });
     }
 
-    
-
-
     public function asignRole(User $user, Role $role)
     {
+
+        //$this->authorize('krishna.role.asign');
 
         DB::table('user_roles')->insert([
             ['role_id' => $role->id, 'user_id' => $user->id]
