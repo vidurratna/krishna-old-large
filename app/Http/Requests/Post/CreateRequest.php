@@ -25,16 +25,12 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'slug' => [
-                'required',
-                Rule::unique('posts', 'slug')->where(function ($query) {
-                    return $query->where('chapter_id', $this->chapter_id);
-                }),
-            ],
-            'created_by' => 'required|exists:users,id',
-            'chapter_id' => 'required|exists:chapters,id',
-            'isGlobal' => 'boolean'
+            'title' => 'max:100',
+            'slug' => 'max:120',
+            'created_by' => 'exists:users,id|uuid',
+            'chapter_id' => 'exists:chapters,id|numeric',
+            'isGlobal' => 'boolean',
+            'published' => 'date'
         ];
     }
 }

@@ -49,6 +49,7 @@ Route::group([
             ],function() {
                 Route::apiResource('roles','Api\RoleController');
                 Route::apiResource('permissions','Api\PermissionController');
+                Route::apiResource('chapters','Api\ChapterController');
         });
 
         Route::group([
@@ -58,7 +59,7 @@ Route::group([
         });
 
         Route::get('/test', function(){
-            $x = Cache::get('user.2.permissions');
+            $x = Cache::get('user.1.permissions');
             $x = collect($x);
             $y = Cache::get('permissions');
 

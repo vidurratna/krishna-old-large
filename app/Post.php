@@ -4,6 +4,7 @@ namespace App;
 
 use App\Concerns\OwnedByChapter;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Post extends Model
 {
@@ -15,8 +16,9 @@ class Post extends Model
         'isGlobal' => 'bool',
     ];
 
-    public function chapter()
+    public function owner()
     {
-        return $this->chapter();
+        return $this->chapter;
     }
+
 }

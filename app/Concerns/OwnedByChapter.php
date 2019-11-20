@@ -2,6 +2,7 @@
 
 namespace App\Concerns;
 
+use App\Chapter;
 use App\Scopes\ChapterOwnedScope;
 use App\Services\ChapterManager;
 
@@ -20,6 +21,6 @@ trait OwnedByChapter {
     }
 
     public function chapter() {
-        $this->belongsTo(Tenant::class, 'chapter_id');
+        return $this->belongsTo(Chapter::class, 'chapter_id');
     }
 }

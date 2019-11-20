@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
             // fkeys
             $table->unsignedBigInteger('role_id');
             //data
@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             //links
             $table->foreign('role_id')->references('id')->on('roles');
+            $table->primary('id');
         });
     }
 

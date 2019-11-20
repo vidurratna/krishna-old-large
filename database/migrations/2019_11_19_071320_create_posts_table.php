@@ -17,11 +17,12 @@ class CreatePostsTable extends Migration
             $table->bigIncrements('id');
             //f-keys
             $table->unsignedBigInteger('chapter_id');
-            $table->unsignedBigInteger('created_by');
+            $table->uuid('created_by');
             //content
             $table->string('title');
             $table->string('slug');
             $table->boolean('isGlobal')->default(0);
+            $table->timestamp('published')->nullable();
             $table->timestamps();
             //settings
             $table->unique(['chapter_id','slug']);

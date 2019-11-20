@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreateRequest;
+use App\Http\Requests\Post\UpdateRequest;
 use App\Post;
 use App\Services\ChapterManager;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -23,7 +25,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+
+        $posts = Post::orderBy('published','desc')->paginate(15);
+
+        return response($posts);
     }
 
     /**
@@ -57,6 +62,7 @@ class PostController extends Controller
 
         if($post)
         {
+            $post['chapter']=$post->owner();
             return response(['data'=>$post]);
         } 
         else 
@@ -72,7 +78,7 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $post)
+    public function update(UpdateRequest $request, $post)
     {
         $this->authorize('chapter.post.update');
 
@@ -80,7 +86,16 @@ class PostController extends Controller
 
         if($post)
         {
-            // do stuff;    
+            $currentChapter = app(ChapterManager::class)->getChapter();
+            if($currentChapter->id === $post->chapter_id){
+                $post->update($request->all());
+                return response([
+                    'message'=>'Post was updated!',
+                    'data'=>$post
+                ],200);
+            } else {
+                return response(['message'=>'Post does not belong to this chapter so it can not be updated!'],401);
+            } 
         } 
         else 
         {
@@ -103,6 +118,7 @@ class PostController extends Controller
 
         if($post)
         {
+            
             $currentChapter = app(ChapterManager::class)->getChapter();
             if($currentChapter->id === $post->chapter_id){
                 $post->delete();

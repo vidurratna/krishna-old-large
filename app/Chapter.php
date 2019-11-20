@@ -11,4 +11,9 @@ class Chapter extends Model
     public function route($name, $parameters = []) {
         return 'http://' . $this->subdomain . app('url')->route($name, $parameters, false);
     }
+
+    public function posts()
+    {
+        $this->hasMany('App\Post');
+    }
 }
