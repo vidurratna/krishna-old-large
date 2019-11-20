@@ -180,6 +180,7 @@ return [
          */
 
         App\Providers\ChapterServiceProvider::class,
+        App\Providers\PermissionServiceProvider::class,
 
     ],
 

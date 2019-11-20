@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,30 @@ Route::group([
             ],function() {
                 Route::post('/register', 'Api\AuthController@register');
                 Route::post('/login', 'Api\AuthController@login');
+                Route::post('/{user}/asign/{role}', 'Api\RoleController@asignRole');
         });
+        
+
+        Route::group([
+            'prefix' => '/admin'
+            ],function() {
+                Route::apiResource('roles','Api\RoleController');
+                Route::apiResource('permissions','Api\PermissionController');
+        });
+
+        Route::group([
+            'prefix' => '/permission'
+            ],function() {
+                Route::post('/{permission}/asign/{role}', 'Api\PermissionController@asignRole');
+        });
+
+        Route::get('/test', function(){
+            $x = Cache::get('user.2.permissions');
+            $x = collect($x);
+            $y = Cache::get('permissions');
+
+            return response(['user' => $x, 'whole' => collect($y)]);
+        });
+        
+        
 });
