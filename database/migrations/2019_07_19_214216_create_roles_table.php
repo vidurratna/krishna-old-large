@@ -14,13 +14,14 @@ class CreateRolesTable extends Migration
     public function up()
     {
         Schema::create('roles', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
             $table->string('name');
             $table->string('ident')->unique();
             $table->text('description');
             $table->boolean('active')->default(0); 
             $table->integer('level')->default(99); 
             $table->timestamps();
+            $table->primary('id');
         });
     }
 

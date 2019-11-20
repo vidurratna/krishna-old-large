@@ -44,4 +44,15 @@ class ChapterManager {
         return false;
     }
 
+
+    public function loadLocalChapter($chapter)
+    {
+        $this->setChapter($chapter);
+    }
+
+    public function unloadLocalChapter()
+    {
+        $this->chapter = null;
+    }
+
 }

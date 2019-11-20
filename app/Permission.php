@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
+    use UsesUuid;
+
     protected $table = 'permissions';
 
     protected $fillable = [

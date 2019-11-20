@@ -2,9 +2,12 @@
 
 namespace App;
 
+use App\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model {
+
+    use UsesUuid;
 
     protected $table = 'roles';
 

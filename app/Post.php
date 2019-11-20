@@ -21,4 +21,9 @@ class Post extends Model
         return $this->chapter;
     }
 
+    public function my_chapter()
+    {
+        $this->belongsTo('App\Chapter');
+    }
+
 }

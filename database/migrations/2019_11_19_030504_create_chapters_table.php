@@ -14,7 +14,7 @@ class CreateChaptersTable extends Migration
     public function up()
     {
         Schema::create('chapters', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
             $table->string('name');
             $table->string('country');
             $table->string('region');
@@ -23,6 +23,8 @@ class CreateChaptersTable extends Migration
             $table->boolean('active')->default(0);  //toggle chapters
             $table->string('subdomain');
             $table->timestamps();
+
+            $table->primary('id');
         });
     }
 
