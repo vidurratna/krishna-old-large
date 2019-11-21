@@ -62,6 +62,7 @@ class PostController extends Controller
 
         if($post)
         {
+            $post['test']=$post->content()->first();
             $post['chapter']=$post->owner();
             return response(['data'=>$post]);
         } 

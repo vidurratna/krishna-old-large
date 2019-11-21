@@ -30,6 +30,7 @@ Route::group([
         ], function () {
 
             Route::apiResource('posts', 'Api\PostController');
+            Route::apiResource('modules', 'Api\ContentModuleController');
             // Route::apiResource('events', 'EventController');
 
         });

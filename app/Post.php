@@ -26,4 +26,9 @@ class Post extends Model
         $this->belongsTo('App\Chapter');
     }
 
+    public function content()
+    {
+        return $this->morphMany('App\ContentModule', 'content_module');
+    }
+
 }
