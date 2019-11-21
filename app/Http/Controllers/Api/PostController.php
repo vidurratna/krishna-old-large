@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ContentModule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreateRequest;
@@ -62,9 +63,9 @@ class PostController extends Controller
 
         if($post)
         {
-            $post['test']=$post->content()->first();
-            $post['chapter']=$post->owner();
-            return response(['data'=>$post]);
+            $post['content']=$post->content()->orderBy('priority','asc')->get();
+            $post['chapter']=$post->owner()->display();
+            return response(['data'=>$post]); 
         } 
         else 
         {
@@ -119,7 +120,6 @@ class PostController extends Controller
 
         if($post)
         {
-            
             $currentChapter = app(ChapterManager::class)->getChapter();
             if($currentChapter->id === $post->chapter_id){
                 $post->delete();

@@ -25,4 +25,9 @@ class Chapter extends Model
     {
         return $this->hasMany(Post::class);
     }
+    
+    public function display()
+    {
+        return "7";
+    }
 }
