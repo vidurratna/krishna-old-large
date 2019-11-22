@@ -18,6 +18,7 @@ class CreatePostsTable extends Migration
             //f-keys
             $table->uuid('chapter_id');
             $table->uuid('created_by');
+            $table->uuid('last_modified');
             //content
             $table->string('title');
             $table->string('slug');
@@ -29,6 +30,7 @@ class CreatePostsTable extends Migration
             //links
             $table->foreign('chapter_id')->references('id')->on('chapters');
             $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('last_modified')->references('id')->on('users');
         });
     }
 

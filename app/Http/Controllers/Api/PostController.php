@@ -43,7 +43,11 @@ class PostController extends Controller
 
         $this->authorize('chapter.post.store');
 
-        $post = Post::create($request->all());
+        $post = $request->all();
+
+        $post['last_modified']=$request->created_by;
+
+        $post = Post::create($post);
 
         return response([
             'message'=>'Post was created!',
@@ -65,6 +69,7 @@ class PostController extends Controller
         {
             $post['content']=$post->content()->orderBy('priority','asc')->get();
             $post['chapter']=$post->owner()->display();
+            $post['tags']=$post->tags()->get();
             return response(['data'=>$post]); 
         } 
         else 

@@ -31,4 +31,9 @@ class Post extends Model
         return $this->morphMany('App\ContentModule', 'content_module');
     }
 
+    public function tags()
+    {
+        return $this->morphToMany('App\Tag', 'taggable');
+    }
+
 }

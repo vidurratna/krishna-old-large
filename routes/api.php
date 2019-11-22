@@ -28,7 +28,7 @@ Route::group([
             'middleware'    => \App\Http\Middleware\IdentifyChapter::class,
             'as'            => 'chapter:',
         ], function () {
-
+            Route::apiResource('tags','Api\TagController');
             Route::apiResource('posts', 'Api\PostController');
             Route::apiResource('modules', 'Api\ContentModuleController');
             // Route::apiResource('events', 'EventController');
@@ -57,6 +57,12 @@ Route::group([
             'prefix' => '/permission'
             ],function() {
                 Route::post('/{permission}/asign/{role}', 'Api\PermissionController@asignRole');
+        });
+
+        Route::group([
+            'prefix' => '/tag'
+            ],function() {
+                Route::post('/{tag}/asign', 'Api\TagController@asign');
         });
 
         Route::get('/test', function(){
