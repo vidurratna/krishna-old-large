@@ -9,6 +9,8 @@ use App\Http\Requests\Post\CreateRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Post;
 use App\Services\ChapterManager;
+use App\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -40,8 +42,11 @@ class PostController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        Cache::forget('user.'. User::first()->id .'.permissions');
 
-        $this->authorize('chapter.post.store');
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        $this->authorize('chapter.post.store', $currentChapter);
 
         $post = $request->all();
 

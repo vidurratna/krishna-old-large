@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -33,15 +34,15 @@ Route::group([
             Route::apiResource('modules', 'Api\ContentModuleController');
             // Route::apiResource('events', 'EventController');
 
-        });
+            Route::group([
+                'prefix' => '/user'
+                ],function() {
+                    Route::post('/register', 'Api\AuthController@register');
+                    Route::post('/login', 'Api\AuthController@login');
+                    Route::post('/{user}/asign/{role}', 'Api\RoleController@asignRole');
+            });
 
 
-        Route::group([
-            'prefix' => '/user'
-            ],function() {
-                Route::post('/register', 'Api\AuthController@register');
-                Route::post('/login', 'Api\AuthController@login');
-                Route::post('/{user}/asign/{role}', 'Api\RoleController@asignRole');
         });
         
 
@@ -66,7 +67,7 @@ Route::group([
         });
 
         Route::get('/test', function(){
-            $x = Cache::get('user.1.permissions');
+            $x = Cache::get('user.'. User::first()->id .'.permissions');
             $x = collect($x);
             $y = Cache::get('permissions');
 

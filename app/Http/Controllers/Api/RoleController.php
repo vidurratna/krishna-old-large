@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\CreateRequest;
 use App\Role;
+use App\Services\ChapterManager;
 use App\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -151,12 +152,16 @@ class RoleController extends Controller
 
         //$this->authorize('krishna.role.asign');
 
-        DB::table('user_roles')->insert([
-            ['role_id' => $role->id, 'user_id' => $user->id]
-        ]);
+        // DB::table('user_roles')->insert([
+        //     ['role_id' => $role->id, 'user_id' => $user->id]
+        // ]);
+
+        DB::table('user_role_chapter')->insert([
+                 ['role_id' => $role->id, 'user_id' => $user->id, 'chapter_id' => '088e7bdf-a657-4b4d-b53b-0f3a74baf6d5']
+             ]);
 
         $this->forgetCache();
         
-        return response(['message' => $user->first_name." was added to ". $role->name]);
+        return response(['message' => " Auckland :" . $user->first_name." was added to ". $role->name]);
     }
 }

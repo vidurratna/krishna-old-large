@@ -40,28 +40,37 @@ class PermissionServiceProvider extends ServiceProvider
         //Cache::forget('permissions') once you add new perms
 
         $permissions->each(function(string $ident) {
-            Gate::define($ident, function (User $user) use($ident) {
+            Gate::define($ident, function (User $user, $chapter) use($ident) {
                 $cacheKey = 'user.' . $user->id . '.permissions';
                 $userPermissions = Cache::get($cacheKey);
 
                 if(! $userPermissions) {
-                    $userClosure = function ($query) use ($user) {
-                        $query->where('users.id', '=', $user->id);
+                    $userClosure = function ($query) use ($user, $chapter) {
+                        $query->where('users.id', '=', $user->id)
+                              ->where('chapter_id', '=', $chapter->id)
+                              ;
                     };
 
                     $userPermissions = Permission::query()
-                                                        ->whereHas('roles', function ($query) use($userClosure){
-                                                            $query->where('active', '=', 1)
-                                                                  ->whereHas('users', $userClosure);
-                                                        })
-                                                        ->orWhereHas('users', $userClosure)
-                                                        ->groupBy('permissions.id')
-                                                        ->where('active', '=', 1)
-                                                        ->pluck('ident');
-                        Cache::put($cacheKey, $userPermissions->toArray());
+                                            ->whereHas('roles', function ($query) use($userClosure){
+                                                $query->where('active', '=', 1)
+                                                        ->whereHas('users', $userClosure);
+                                            })
+                                            //->orWhereHas('users', $userClosure)
+                                            //->groupBy('permissions.id')
+                                            //->where('active', '=', 1)
+                                            ->pluck('ident');
+
+                    Cache::put($cacheKey, $userPermissions->toArray());
                 } else {
                     $userPermissions = collect($userPermissions);
                 } 
+
+                // $error = \Illuminate\Validation\ValidationException::withMessages([
+                //     'field_name_1' => [$userPermissions],
+                //     'chapter' => $chapter,
+                //  ]);
+                //  throw $error;
 
                 if ($userPermissions) {
                     $altPermissions = $this->altPermissions($ident);

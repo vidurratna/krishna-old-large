@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id');
             // fkeys
-            $table->uuid('role_id');
+            //$table->uuid('role_id');
             //data
             $table->string('title');
             $table->string('first_name');
@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
             //links
-            $table->foreign('role_id')->references('id')->on('roles');
+            //$table->foreign('role_id')->references('id')->on('roles');
             $table->primary('id');
         });
     }
