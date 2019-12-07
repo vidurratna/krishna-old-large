@@ -32,6 +32,5 @@ class Role extends Model {
     {
         return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','role_id'); 
         //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
-
     }
 }

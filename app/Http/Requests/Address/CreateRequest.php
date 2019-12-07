@@ -24,7 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:5',
+            'name' => 'required|min:5|unique:addresses',
             'address1' => 'required|min:5',
             'address2' => 'min:5',
             'address2' => 'min:5',
@@ -33,6 +33,7 @@ class CreateRequest extends FormRequest
             'country' => 'required|min:5',
             'postalcode' => 'required|min:2',
             'created_by' => 'required|uuid',
+            'isGlobal' => 'boolean'
         ];
     }
 }

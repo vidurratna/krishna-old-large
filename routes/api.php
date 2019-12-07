@@ -32,7 +32,19 @@ Route::group([
             Route::apiResource('tags','Api\TagController');
             Route::apiResource('posts', 'Api\PostController');
             Route::apiResource('modules', 'Api\ContentModuleController');
+            Route::apiResource('addresses', 'Api\AddressController');
+            Route::apiResource('chapters','Api\ChapterController');
             // Route::apiResource('events', 'EventController');
+
+            Route::group([
+                'prefix' => '/info'
+                ],function() {
+                    Route::get('/all','Api\ChapterController@index');
+                    Route::get('/{chapter}','Api\ChapterController@show');
+            });
+
+            Route::post('/join', 'Api\ChapterController@join');
+            Route::post('/leave', 'Api\ChapterController@leave');
 
             Route::group([
                 'prefix' => '/user'
@@ -42,6 +54,17 @@ Route::group([
                     Route::post('/{user}/asign/{role}', 'Api\RoleController@asignRole');
             });
 
+            Route::group([
+                'prefix' => '/tag'
+                ],function() {
+                    Route::post('/{tag}/asign', 'Api\TagController@asign');
+            });
+
+            Route::group([
+                'prefix' => '/address'
+                ],function() {
+                    Route::post('/{address}/asign', 'Api\AddressController@asign');
+            });
 
         });
         
@@ -60,13 +83,9 @@ Route::group([
                 Route::post('/{permission}/asign/{role}', 'Api\PermissionController@asignRole');
         });
 
-        Route::group([
-            'prefix' => '/tag'
-            ],function() {
-                Route::post('/{tag}/asign', 'Api\TagController@asign');
-        });
+        
 
-        Route::get('/test', function(){
+        Route::get('/check/cache', function(){
             $x = Cache::get('user.'. User::first()->id .'.permissions');
             $x = collect($x);
             $y = Cache::get('permissions');

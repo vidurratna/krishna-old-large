@@ -21,7 +21,7 @@ class CreateUserRoleChapterTable extends Migration
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('chapter_id')->references('id')->on('chapters')->onDelete('cascade');
-            $table->unique(['role_id', 'user_id']);
+            $table->unique(['role_id', 'user_id', 'chapter_id']);
         });
     }
 

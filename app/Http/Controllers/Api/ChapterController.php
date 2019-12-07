@@ -130,69 +130,41 @@ class ChapterController extends Controller
         }
     }
 
-    public function join($user, $chapter)
+    public function join()
     {
 
-        //$this->authorize('krishna.user.join');
+        $user = auth()->user();
 
-        $user = User::find($user);
+        $chapter = app(ChapterManager::class)->getChapter();
 
-        if($user)
-        {
-            $chapter = Chapter::find($chapter);
+        if($user->chapters()->where('chapter_id',$chapter->id)->exists()){
+            return response(['message'=>$user->first_name.' is already a part of '. $chapter->name],409);
+        } else {
+            DB::table('user_role_chapter')->insert([
+                ['chapter_id'=>$chapter->id, 'user_id'=>$user->id, 'role_id' => '141d132f-4b96-4c27-a06d-910d5c41d5f9']
+            ]);
 
-            if($chapter)
-            {
-                if($user->chapters()->where('id',$chapter->id)->exists()){
-                    return response(['message'=>$user->first_name.' is already a part of '. $chapter->name],409);
-                } else {
-                    DB::table('chapter_user')->insert([
-                        ['chapter_id'=>$chapter->id, 'user_id'=>$user->id]
-                    ]);
-    
-                    return response(['message'=> $user->first_name. ' was added to ' . $chapter->name]);
-                }
-            } 
-            else 
-            {
-                return response(['message'=>'Did not find a Chapter matching that ID'],404);
-            }
-        } 
-        else 
-        {
-            return response(['message'=>'Did not find a user matching that ID'],404);
+            return response(['message'=> $user->first_name. ' was added to ' . $chapter->name . ' with role of User']);
         }
     }
 
-    public function leave($user, $chapter)
+    public function leave()
     {
 
-        $this->authorize('krishna.user.leave');
+        $user = auth()->user();
 
-        $user = User::find($user);
+        $chapter = app(ChapterManager::class)->getChapter();
 
-        if($user)
-        {
-            $chapter = Chapter::find($chapter);
+        if(!$user->chapters()->where('chapter_id',$chapter->id)->exists()){
+            return response(['message'=>$user->first_name.' is NOT a part of '. $chapter->name],409);
+        } else {
 
-            if($chapter)
-            {
-                if(!$user->chapters()->where('id',$chapter->id)->exists()){
-                    return response(['message'=>$user->first_name.' is already NOT a part of '. $chapter->name],409);
-                } else {
-                    $user->chapters()->wherePovit('chapter_id','=',$chapter->id)->detach();
-    
-                    return response(['message'=> $user->first_name. ' was removed from ' . $chapter->name]);
-                }
-            } 
-            else 
-            {
-                return response(['message'=>'Did not find a Chapter matching that ID'],404);
-            }
-        } 
-        else 
-        {
-            return response(['message'=>'Did not find a user matching that ID'],404);
+            DB::table('user_role_chapter')
+                    ->where('chapter_id','=',$chapter->id)
+                    ->where('user_id','=',$user->id)
+                    ->delete();
+
+            return response(['message'=> $user->first_name. ' was removed from ' . $chapter->name]);
         }
     }
 
@@ -214,7 +186,7 @@ class ChapterController extends Controller
 
     public function users()
     {
-        $this->authorize('chapter.user.list');
+        //$this->authorize('chapter.user.list');
 
         $currentChapter = app(ChapterManager::class)->getChapter();
 

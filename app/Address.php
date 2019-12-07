@@ -11,6 +11,10 @@ class Address extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'isGlobal' => 'bool',
+    ];
+
     public function chapters()
     {
         return $this->morphedByMany('App\Chapter', 'addressable');

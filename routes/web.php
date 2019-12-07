@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+Route::group(['prefix' => 'ajax'], function() {
+    // all routes that don't need to go to react-router
+});
+
+Route::get('/{path?}', function () {
     return view('welcome');
 });

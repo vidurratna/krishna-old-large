@@ -15,7 +15,7 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('address1');
             $table->string('address2')->nullable();
             $table->string('address3')->nullable();
@@ -25,6 +25,8 @@ class CreateAddressesTable extends Migration
             $table->string('postalcode');
             $table->uuid('created_by');
             $table->uuid('last_modified');
+
+            $table->boolean('isGlobal')->default(0);
 
             $table->timestamps();
             $table->foreign('created_by')->references('id')->on('users');

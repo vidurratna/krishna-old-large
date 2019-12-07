@@ -6,6 +6,9 @@ use App\Address;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Address\AsignRequest;
 use App\Http\Requests\Address\CreateRequest;
+use App\Http\Requests\Address\IndexRequest;
+use App\Http\Requests\Address\UpdateRequest;
+use App\Services\ChapterManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +16,7 @@ class AddressController extends Controller
 {
      // function __construct()
     // {
-    //     return $this->middleware('auth:api')->except('index','show');
+    //     return $this->middleware('auth:api')->except('show');
     // }
 
     /**
@@ -21,9 +24,22 @@ class AddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
-        return Address::all();
+
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        if($request->all == '1' || $request->all == 'true'){
+
+            //$this->authorize('chapter.addresses.all', $currentChapter);
+            
+            return Address::all();
+        }
+
+        //$this->authorize('chapter.addresses.public', $currentChapter);
+
+        return Address::where('isGlobal',true)->paginate(15);
+
     }
 
     /**
@@ -34,6 +50,10 @@ class AddressController extends Controller
      */
     public function store(CreateRequest $request)
     {
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        //$this->authorize('chapter.address.store', $currentChapter);
+
         $address=$request->all();
 
         $address['last_modified']=$request->created_by;
@@ -52,9 +72,25 @@ class AddressController extends Controller
      * @param  \App\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function show(Address $address)
+    public function show($address)
     {
-        //
+        $address = Address::find($address);
+
+        if($address)
+        {
+            if($address->isGlobal == false){
+                $currentChapter = app(ChapterManager::class)->getChapter();
+
+                $this->authorize('chapter.address.show', $currentChapter);
+
+                return response(['data'=>$address]); 
+            }
+            return response(['data'=>$address]); 
+        } 
+        else 
+        {
+            return response(['message'=>'Did not find a address matching that ID'],404);
+        }
     }
 
     /**
@@ -64,9 +100,27 @@ class AddressController extends Controller
      * @param  \App\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Address $address)
+    public function update(UpdateRequest $request, $address)
     {
-        //
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        //$this->authorize('chapter.address.update', $currentChapter);
+
+        $address = Address::find($address);
+
+        if($address)
+        {
+            $address->update($request->all());
+            return response([
+                'message'=>'Address was updated!',
+                'data'=>$address
+            ],200);
+        } 
+        else 
+        {
+            return response(['message'=>'Did not find a Address matching that ID'],404);
+        }
+
     }
 
     /**
@@ -75,15 +129,31 @@ class AddressController extends Controller
      * @param  \App\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Address $address)
+    public function destroy($address)
     {
-        //
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        //$this->authorize('chapter.address.destroy', $currentChapter);
+   
+        $address = Address::find($address);
+
+        if($address)
+        {
+            $address->delete();
+            return response(['message'=>'Address has been deleted!']);
+        } 
+        else 
+        {
+            return response(['message'=>'Did not find a Address matching that ID'],404);
+        }
     }
 
     public function asign(AsignRequest $request, $address)
     {
 
-        //$this->authorize('chapter.tags.asign');
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        //$this->authorize('chapter.address.asign', $currentChapter);
 
         $address = Address::find($address);
 

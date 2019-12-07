@@ -25,9 +25,14 @@ class Chapter extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function address()
+    {
+        return $this->morphToMany('App\Address', 'addressable');
+    }
     
     public function display()
     {
-        return "7";
+        return "ERROR: contact admin - error in chapter displayer.";
     }
 }

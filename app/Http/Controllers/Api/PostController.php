@@ -42,7 +42,6 @@ class PostController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        Cache::forget('user.'. User::first()->id .'.permissions');
 
         $currentChapter = app(ChapterManager::class)->getChapter();
 
@@ -92,13 +91,14 @@ class PostController extends Controller
      */
     public function update(UpdateRequest $request, $post)
     {
-        $this->authorize('chapter.post.update');
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        $this->authorize('chapter.post.update', $currentChapter);
 
         $post = Post::find($post);
 
         if($post)
         {
-            $currentChapter = app(ChapterManager::class)->getChapter();
             if($currentChapter->id === $post->chapter_id){
                 $post->update($request->all());
                 return response([
@@ -123,14 +123,14 @@ class PostController extends Controller
      */
     public function destroy($post)
     {
+        $currentChapter = app(ChapterManager::class)->getChapter();
 
-        $this->authorize('chapter.post.destroy');
+        $this->authorize('chapter.post.destroy', $currentChapter);
 
         $post = Post::find($post);
 
         if($post)
         {
-            $currentChapter = app(ChapterManager::class)->getChapter();
             if($currentChapter->id === $post->chapter_id){
                 $post->delete();
                 return response(['message'=>'Post has been deleted!']);

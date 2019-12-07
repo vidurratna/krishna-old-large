@@ -28,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
             'posts' => 'App\Post',
             'tags' => 'App\Tag',
             'events' => 'App\Event',
-            'contentModules'=>'App\ContentModule'
+            'contentModules'=>'App\ContentModule',
+            'chapters' => 'App\Chapter',
+            'addresses' => 'App\Address'
         ]);
     }
 }

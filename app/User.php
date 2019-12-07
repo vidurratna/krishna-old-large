@@ -39,18 +39,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles() {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    public function roles()
+    {
+        return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','role_id'); 
+        //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
     }
-
-
-    // public function roles()
-    // {
-    //     return $this->belongsToMany(User::class, 'user_role_chapter', 'user_id', 'role_id', 'chapter_id');
-    // }
 
     public function permissions()
     {
         return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id');
+    }
+
+    public function chapters()
+    {
+        return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','chapter_id','role_id'); 
+        //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
     }
 }
