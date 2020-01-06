@@ -1,27 +1,68 @@
 import React, { Component } from 'react'
 
-import { Switch } from 'react-router-dom';
-
-import { Route } from 'react-router-dom';
+import {Route, Switch, Redirect } from 'react-router-dom';
 
 import Index from '../Containers/Dashboard';
+import Login from '../Containers/Authenticate/Login';
+import Register from '../Containers/Authenticate/Register';
 
 
-export default class Routes extends Component {
+import { connect } from 'react-redux';
+import AdminPage from '../Containers/Admin';
+
+
+class Routes extends Component {
     render() {
         return (
             <Switch>
+                
+                <AuthenticatedRoute 
+                    exact
+                    auth={this.props.Authenticate.isAuthenticated}
+                    path="/admin"
+                    >
+                    <AdminPage
+
+                    />
+                </AuthenticatedRoute>
                 <Route
-                component={Index}
+                component={Login}
                 exact
-                path="/admin"
+                path="/login"
                 />
                 <Route
-                component={Index}
+                component={Register}
                 exact
-                path="/test/admin"
+                path="/register"
                 />
             </Switch>
         )
     }
 }
+
+
+function AuthenticatedRoute({ children, ...rest}) {
+    return (
+        <Route
+            {...rest}
+            render={({location}) => rest.auth ? (
+                children
+                ) : (
+                    <Redirect 
+                        to={{
+                            pathname: "/login",
+                            state: {from:  location, unAuthenticated: true}
+                        }}
+                    />
+                )
+                }
+            />
+        );
+    } 
+
+
+    const mapStateToProps = (state) => ({
+        Authenticate: state.Auth,
+    })
+
+    export default connect(mapStateToProps)(Routes)

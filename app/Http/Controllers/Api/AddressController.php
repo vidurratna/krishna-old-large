@@ -148,7 +148,7 @@ class AddressController extends Controller
         }
     }
 
-    public function asign(AsignRequest $request, $address)
+    public function assign(AsignRequest $request, $address)
     {
 
         $currentChapter = app(ChapterManager::class)->getChapter();
@@ -167,7 +167,7 @@ class AddressController extends Controller
                 ]
             ]);
 
-            return response(['message'=> $request->type. " with id of ". $request->id." has been asigned to address: ".$address->name]);
+            return response(['message'=> $request->type. " with id of ". $request->id." has been assigned to address: ".$address->name]);
         } 
         else 
         {

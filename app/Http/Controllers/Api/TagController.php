@@ -149,7 +149,7 @@ class TagController extends Controller
     }
 
 
-    public function asign(AsignRequest $request, $tag)
+    public function assign(AsignRequest $request, $tag)
     {
 
         //$this->authorize('chapter.tags.asign');

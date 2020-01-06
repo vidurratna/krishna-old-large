@@ -147,7 +147,7 @@ class RoleController extends Controller
         });
     }
 
-    public function asignRole(User $user, Role $role)
+    public function assignRole(User $user, Role $role)
     {
 
         //$this->authorize('krishna.role.asign');

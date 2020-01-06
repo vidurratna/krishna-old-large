@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 
 export default class Dashboard extends Component {
     render() {
-        console.log("test");
         return (
             <div>
-                <h1>Dashboard</h1>
+                <h1>1234579689</h1>
             </div>
         )
     }

@@ -41,6 +41,7 @@ Route::group([
                 ],function() {
                     Route::get('/all','Api\ChapterController@index');
                     Route::get('/{chapter}','Api\ChapterController@show');
+                    Route::get('/','Api\ChapterController@me');
             });
 
             Route::post('/join', 'Api\ChapterController@join');
@@ -51,19 +52,19 @@ Route::group([
                 ],function() {
                     Route::post('/register', 'Api\AuthController@register');
                     Route::post('/login', 'Api\AuthController@login');
-                    Route::post('/{user}/asign/{role}', 'Api\RoleController@asignRole');
+                    Route::post('/{user}/assign/{role}', 'Api\RoleController@assignRole');
             });
 
             Route::group([
                 'prefix' => '/tag'
                 ],function() {
-                    Route::post('/{tag}/asign', 'Api\TagController@asign');
+                    Route::post('/{tag}/assign', 'Api\TagController@assign');
             });
 
             Route::group([
                 'prefix' => '/address'
                 ],function() {
-                    Route::post('/{address}/asign', 'Api\AddressController@asign');
+                    Route::post('/{address}/assign', 'Api\AddressController@assign');
             });
 
         });

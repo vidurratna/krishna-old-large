@@ -16,4 +16,6 @@ Route::group(['prefix' => 'ajax'], function() {
 });
 
 
-Route::get('/{any}', 'Web\KrishnaController@index')->where('any', '.*');
+Route::get('/{any?}', function () {
+    return view('app');
+})->where('any', '^(?!api\/)[\/\w\.-]*');

@@ -77,6 +77,21 @@ class ChapterController extends Controller
         }
     }
 
+    public function me()
+    {
+        $currentChapter = app(ChapterManager::class)->getChapter();
+
+        if($currentChapter)
+        {
+            $currentChapter['address']=$currentChapter->address()->get();
+            return response(['data'=>$currentChapter]);
+        } 
+        else 
+        {
+            return response(['message'=>'Did not find a chapter matching that ID'],404);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
