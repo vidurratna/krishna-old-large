@@ -1,39 +1,12 @@
 
 import React, { Component } from 'react'
 
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Button from '@material-ui/core/Button';
-
-import { StylesProvider } from "@material-ui/styles";
-
-import styled from  'styled-components';
-
-import {Input} from '../../../Components/Inputs'
-
-import { SignUp } from '../style';
-
 import { store } from 'react-notifications-component'
 import { Error } from '../../../Components/Alerts';
-
-
-const Btn = styled(Button)`
-    margin: 16px 0px;
-    padding: 14px;
-    background-color: #55514e;
-    color: #fff;
-
-    &:hover{ 
-        background-color: #a9866c;
-    }
-
-`;
-
-export const Form = styled.form`
-  display:flex;
-  flex-direction: column;
-  max-width: 600px;
-`
+import Text from '../../../Components/Inputs/Text';
+import Button from '../../../Components/Inputs/Button';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { api } from '../../../Services/Api';
 
 export default class LoginForm extends Component {
 
@@ -41,10 +14,11 @@ export default class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "",
-            email_error: false,
-            password_error: false,
-            password: "",
+            errors: {},
+            fields: {
+                email: "",
+                password: "",
+            },
             loading: false,
         };
 
@@ -53,113 +27,148 @@ export default class LoginForm extends Component {
 
     }
 
-    handleChange(event) {
+    handleChange(event) {   
         this.setState({
             ...this.state,
-            [event.target.name]: event.target.value,
+            fields: {
+                ...this.state.fields,
+                [event.target.name]: event.target.value,
+            }
         })
     }
 
     handleSubmit(event) {
         event.preventDefault();
-
-        let newState = {
-            ...this.state,
-            email_error: false,
-            password_error: false,
-        }
-        
-        if(this.state.email <= 0){
-            newState = {
-                ...newState,
-                email_error: true,
-            }
-        }
-        if(this.state.password <= 0){
-            newState = {
-                ...newState,
-                password_error: true,
-            }
-        }
-
-        if(newState.password_error || newState.email_error){
-            this.setState(newState);
-        } else {
-            let url = window.location.hostname;
-            this.setState({...this.state, loading: true})
-            Axios.post("https://"+url+"/api/v1/user/login", {
-                email: this.state.email,
-                password: this.state.password
+        this.setState({...this.state, errors: {}, loading: true})
+        api.post('user/login', this.state.fields)
+            .then(res => {
+                this.setState({...this.state, loading: false});
+                api.interceptors.request.use(function (config) {
+                    config.headers = {...config.headers, "authorization": "Bearer "+res.data.token}
+                    return config;
+                }, function( error ) {
+                    return Promise.reject(error);
+                })
+                window.localStorage.setItem('krishna_token', res.data.token);
+                this.props.submit(res.data);
             })
-                .then(res => {
-                    setTimeout(() => {
-                        this.props.submit(res.data);
-                    }, 100);
-                    this.setState({...this.state, loading: false})
-                })
-                .catch(error => {
-                    if(error.response.status === 401){
-                        setTimeout(() => {
-                            store.addNotification({
-                                content: <Error message="Incorrect Email or Password!"/>,
-                                insert: "bottom",
-                                container: "bottom-left",
-                                animationIn: ['animated', 'fadeInLeft'],
-                                animationOut: ['animated', 'fadeOutLeft'],
-                                dismiss: {
-                                    duration: 4000,
-                                }
-                            })
-                        }, 100);
-                    } else {
-                        console.log(error)
-                    }
-                    this.setState({...this.state, loading: false})
-                })
+            .catch(error => {
+                switch(error.response.status){
+                    case 422:
+                        this.setState({errors:error.response.data.errors})
+                        break
+                    case 401:
+                        this.setState({
+                            errors: {
+                                email: "Email or password is incorrect",
+                                password: true,
+                            }
+                        })
+                        break
+                    default:
+                        store.addNotification({
+                            content: <Error message="Something has gone wrong, please try again later!"/>,
+                            insert: "bottom",
+                            container: "bottom-left",
+                            animationIn: ['animated', 'fadeInLeft'],
+                            animationOut: ['animated', 'fadeOutLeft'],
+                            dismiss: {
+                                duration: 4000,
+                            }
+                        })
+                }
+                this.setState({...this.state, loading: false})
+            })
+            // let url = window.location.hostname;
+            // this.setState({...this.state, loading: true})
+            // Axios.post("https://"+url+"/api/v1/user/login", {
+            //     email: this.state.email,
+            //     password: this.state.password
+            // })
+            //     .then(res => {
+            //         setTimeout(() => {
+            //             this.props.submit(res.data);
+            //         }, 100);
+            //         this.setState({...this.state, loading: false})
+            //     })
+            //     .catch(error => {
+            //         if(error.response.status === 401){
+            //             setTimeout(() => {
+            //                 store.addNotification({
+            //                     content: <Error message="Incorrect Email or Password!"/>,
+            //                     insert: "bottom",
+            //                     container: "bottom-left",
+            //                     animationIn: ['animated', 'fadeInLeft'],
+            //                     animationOut: ['animated', 'fadeOutLeft'],
+            //                     dismiss: {
+            //                         duration: 4000,
+            //                     }
+            //                 })
+            //             }, 100);
+            //         } else {
+            //             console.log(error)
+            //         }
+            //         this.setState({...this.state, loading: false})
+            //     })
         }
         
-    }
 
     render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
-                  <StylesProvider injectFirst>
-                        <FormControl required error={this.state.email_error}>
-                            <Input
-                                autoFocus
-                                variant="outlined"
-                                label="Email!"
-                                id="email_login"
-                                name="email"
-                                value={this.state.email}
-                                type="email"
-                                error={this.state.email_error}
-                                onChange={this.handleChange}
-                                aria-describedby="email-error-text"
-                            />
-                            {this.state.email_error ? <FormHelperText id="email-error-text">Please enter a email</FormHelperText> : null}
-                        </FormControl>
-                        <FormControl required error={this.state.password_error}> 
-                            <Input
-                                variant="outlined"
-                                label="Password!"
-                                value={this.state.password}
-                                id="password_login"
-                                type="password"
-                                name="password"
-                                error={this.state.password_error}
-                                onChange={this.handleChange}
-                            />
-                            {this.state.password_error ? <FormHelperText id="password-error-text"><SignUp error to="/forgot">Forget Password?</SignUp></FormHelperText> : null}
-                        </FormControl>
-                        <Btn
-                            type="submit"
-                            variant="contained"
-                        >
-                            Login!
-                        </Btn>
-                  </StylesProvider>
-            </Form>
+            // <Form onSubmit={this.handleSubmit}>
+            //       <TextInput
+            //             label="Email"
+            //             id="email_login"
+            //             name="email"
+            //             type="email"
+            //             onChange={this.handleChange}
+            //             value={this.state.email}
+            //             error={this.state.email_error}
+            //             errorMsg="Please enter a valid email!"
+            //         />
+            //         <TextInput
+            //             label="Password"
+            //             id="password_login"
+            //             name="password"
+            //             type="password"
+            //             forgotPassword
+            //             onChange={this.handleChange}
+            //             value={this.state.password}
+            //             error={this.state.password_error}
+            //             errorMsg="Please enter a valid password!"
+            //         />
+            //         <Button
+            //             text="Login"
+            //             type="submit"
+            //             loading={this.state.loading}
+            //         />
+            // </Form>
+            <form onSubmit={this.handleSubmit}>
+                <Text
+                    label="Email"
+                    id="email"
+                    name="email"
+                    type="email" 
+                    onChange={this.handleChange}
+                    value={this.state.fields.email}
+                    error={this.state.errors.email}
+                />
+                <Text
+                    label="Password"
+                    id="password"
+                    name="password"
+                    type="password" 
+                    onChange={this.handleChange}
+                    value={this.state.fields.password}
+                    error={this.state.errors.password}
+                />
+                <Button
+                    text="Sign In"
+                    type="submit"
+                    loading={this.state.loading}
+                    icon={faSignInAlt}
+                />
+            </form>
         )
     }
 }

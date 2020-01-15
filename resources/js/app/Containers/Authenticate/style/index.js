@@ -22,7 +22,7 @@ export const Page = styled.div`
     }
 
     @media ${device.laptop} {
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: ${props => props.left ? "4fr 1fr" : "1fr 4fr"};
     }
 
     @media ${device.tablet} {
@@ -87,10 +87,10 @@ export const CallToAction = styled.h5`
     font-weight: 300;
     padding-top: 40px;
     text-align: right;
-    font-size: 28px;
+    font-size: 20px;
 
     @media ${device.laptop} {
-        font-size: 22px;
+        font-size: 17px;
     }
 
     @media ${device.tablet} {
@@ -102,12 +102,12 @@ export const CallToAction = styled.h5`
 export const SignUp = styled(Link)`
     padding-left: 5px;
 
-    color: ${props => props.error ? "#f44336" : "#41d2ff"};
+    color: #41d2ff;
 
     transition: 0.3s;
 
     &:any-link{
-        color: ${props => props.error ? "#f44336" : "#41d2ff"};;
+        color: #41d2ff;
     }
 
     &:hover {

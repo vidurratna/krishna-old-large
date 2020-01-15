@@ -2,28 +2,35 @@ import React, { Component } from 'react'
 
 import {Route, Switch, Redirect } from 'react-router-dom';
 
-import Index from '../Containers/Dashboard';
 import Login from '../Containers/Authenticate/Login';
 import Register from '../Containers/Authenticate/Register';
 
-
 import { connect } from 'react-redux';
 import AdminPage from '../Containers/Admin';
+import Dashboard, {Header as DashboardHeader} from '../Containers/Admin/Containers/Dashboard';
+import Account from '../Containers/Authenticate/Account';
 
 
 class Routes extends Component {
     render() {
         return (
             <Switch>
-                
                 <AuthenticatedRoute 
                     exact
                     auth={this.props.Authenticate.isAuthenticated}
                     path="/admin"
                     >
                     <AdminPage
-
+                        content={Dashboard}
+                        header={DashboardHeader}
                     />
+                </AuthenticatedRoute>
+                <AuthenticatedRoute 
+                    exact
+                    auth={this.props.Authenticate.isAuthenticated}
+                    path="/account"
+                    >
+                    <Account/>
                 </AuthenticatedRoute>
                 <Route
                 component={Login}

@@ -3,82 +3,44 @@ import { connect } from 'react-redux'
 
 import { Page, Block, Title, SubTitle, Form, CallToAction, SignUp } from './style'
 
-import styled from  'styled-components';
-
-
 import { store } from 'react-notifications-component'
-import { Warning } from '../../Components/Alerts';
+import { Warning, Success } from '../../Components/Alerts';
 
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import PageSelect from './Components/PageSelect';
-import { Input } from '../../Components/Inputs';
 
-const One = () => {
-    return(
-            <React.Fragment>
-                <Input 
-                    autoFocus
-                    variant="outlined"
-                    label="Email!"
-                    id="email_login"
-                    name="email"
-                    
-                    type="email"
-                    // value={this.state.email}
-                    // error={this.state.email_error}
-                    // onChange={this.handleChange}
-                    aria-describedby="email-error-text"
-                />
-                <Input 
-                    variant="outlined"
-                    label="Email!"
-                    id="email_login"
-                    name="email"
-                    
-                    type="email"
-                    // value={this.state.email}
-                    // error={this.state.email_error}
-                    // onChange={this.handleChange}
-                    aria-describedby="email-error-text"
-                />
-                <Input 
-                    variant="outlined"
-                    label="Email!"
-                    id="email_login"
-                    name="email"
-                    
-                    type="email"
-                    // value={this.state.email}
-                    // error={this.state.email_error}
-                    // onChange={this.handleChange}
-                    aria-describedby="email-error-text"
-                />
-            </React.Fragment>
-    )
-}
-
-const Two = () => {
-    return(
-        <h3 style={{margin:"22px 0px 0px"}}>Two</h3>
-    )
-}
-
-const Three = () => {
-    return(
-        <h3 style={{margin:"22px 0px 0px"}}>Three</h3>
-    )
-}
+import RegisterForm from './Components/RegisterForm';
+import { SIGN_IN } from '../../Redux/actionTypes';
 
 export class Register extends Component {
 
     constructor(props) {
-        super(props);
-        this.state = {
-            page_number: 1,
-            page: <One/>,
-        };
 
-        this.handleChange = this.handleChange.bind(this);
+        super(props);
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    handleLoginRedirect() {
+
+        setTimeout(() => {
+            store.addNotification({
+                content: <Success message="You have been signed up!"/>,
+                insert: "bottom",
+                container: "bottom-left",
+                animationIn: ['animated', 'fadeInLeft'],
+                animationOut: ['animated', 'fadeOutLeft'],
+                dismiss: {
+                    duration: 3000,
+                }
+            })
+        }, 100);
+        this.props.history.replace("/")
+    }
+
+    handleSubmit(data){
+        this.props.sign_in(data);
+        this.handleLoginRedirect();
     }
 
     componentDidMount() {
@@ -105,15 +67,6 @@ export class Register extends Component {
 
     }
 
-    handleChange(number){
-        let pages = [<One/>, <Two/>, <Three/>]
-        this.setState({
-            ...this.state,
-            page: pages[number-1],
-            page_number: number,
-        })
-    }
-
     render() {
         return (
             <Page left>
@@ -121,10 +74,7 @@ export class Register extends Component {
                     <Form>
                         <SubTitle>Krishna</SubTitle>
                         <Title>Sign Up</Title>
-                        <PageSelect change={this.handleChange} page={this.state.page_number}/>
-                        <div>
-                            {this.state.page}
-                        </div>
+                        <RegisterForm submit={this.handleSubmit}/>
                     </Form>
                     <div>
                         <CallToAction>

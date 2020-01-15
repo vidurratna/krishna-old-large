@@ -16,13 +16,11 @@ class CreateAddressesTable extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('name')->unique();
-            $table->string('address1');
-            $table->string('address2')->nullable();
-            $table->string('address3')->nullable();
+            $table->string('address');
             $table->string('city');
             $table->string('region');
             $table->string('country');
-            $table->string('postalcode');
+            $table->string('postal_code');
             $table->uuid('created_by');
             $table->uuid('last_modified');
 

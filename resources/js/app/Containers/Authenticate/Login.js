@@ -25,8 +25,6 @@ export class Login extends Component {
 
         document.title = "Login - Krishna";
 
-        console.log(this)
-
         if(this.props.Authenticate.isAuthenticated){
 
             setTimeout(() => {

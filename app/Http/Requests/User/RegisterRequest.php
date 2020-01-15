@@ -25,11 +25,17 @@ class RegisterRequest extends FormRequest
     {
         return [
             'title' => 'required|max:15|min:2',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'phone' => 'required',
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
+            'phone' => 'required|min:2',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required',
+            'password' => 'required|min:10|confirmed',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|min:5',
+            'city' => 'required|min:5',
+            'region' => 'required|min:5',
+            'country' => 'required|min:5',
+            'postal_code' => 'required|min:2',
             //'role_id' => 'required|exists:roles,id'
         ];
     }

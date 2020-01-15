@@ -8,8 +8,6 @@ import { Provider } from 'react-redux';
 
 import rootReducer from './Redux/Reducers';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-
 
 const saveState = (state) => {
     try {

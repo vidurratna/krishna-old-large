@@ -25,9 +25,7 @@ class CreateRequest extends FormRequest
     {
         return [
             'name' => 'required|min:5|unique:addresses',
-            'address1' => 'required|min:5',
-            'address2' => 'min:5',
-            'address2' => 'min:5',
+            'address' => 'required|min:5',
             'city' => 'required|min:5',
             'region' => 'required|min:5',
             'country' => 'required|min:5',

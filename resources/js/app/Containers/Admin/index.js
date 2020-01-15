@@ -1,37 +1,26 @@
-import React, { Component } from 'react'
+import React from 'react'
+import styled from  'styled-components';
 
-export default class AdminPage extends Component {
+export const Grid = styled.div`
+    display: grid;
+`
 
-    constructor(props) {
-        super(props);
 
-        this.state = { hideSidebar: false };
-
-        this.handleSidebar = this.handleSidebar.bind(this);
-    }
-
-    handleSidebar() {
-        this.setState({
-            hideSidebar:  !this.state.hideSidebar
-        });
-    }
-
-    render() {
-        return (
+export default function index(props) {
+    return (
+        <div>
             <div>
                 <div>
-                    <div>
-
-                    </div>
-                    {this.props.header}
+                    stuff
                 </div>
-                <div>
-                    <div>
-
-                    </div>
-                    {this.props.content}
-                </div>
+                <props.header/>
             </div>
-        )
-    }
+            <div>
+                <div>
+                    stufffff
+                </div>
+                <props.content/>
+            </div>
+        </div>
+    )
 }

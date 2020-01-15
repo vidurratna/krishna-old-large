@@ -50,9 +50,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id');
     }
 
+    public function address()
+    {
+        return $this->morphToMany('App\Address', 'addressable');
+    }
+
     public function chapters()
     {
-        return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','chapter_id','role_id'); 
+        return $this->belongsToMany(Chapter::class, 'user_role_chapter')->withPivot('user_id','chapter_id','role_id'); 
         //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
     }
 }

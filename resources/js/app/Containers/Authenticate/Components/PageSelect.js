@@ -9,8 +9,8 @@ const Holder = styled.div`
 const Line = styled.div`
     height: 8px;
     background: #02001e;
+    top: 22px;
     width: 80%;
-    top: 32px;
     position: relative;
 `
 
@@ -21,13 +21,13 @@ const BallHolder = styled.div`
 `
 
 const Ball = styled.div`
-    background: ${props => props.selected ? "#55514e" : "#fff"};
-    color: ${props => props.selected ? "#fff" : "#55514e"};
+    background: ${props => props.error ? "#e21818" : props.selected ? "#55514e" : "#fff"};
+    color: ${props => props.error ? "#fff" : props.selected ? "#fff" : "#55514e"};
     border: 3px solid #55514e;
-    width: 50px;
+    width: 30px;
     display: flex;
     transition: 0.3s;
-    height: 50px;
+    height: 30px;
     border-radius: 47px;
 
     cursor: pointer;
@@ -39,7 +39,7 @@ const Ball = styled.div`
         color: #fff;
     }
 
-    & h1 {
+    & h2 {
         margin: auto;
     }
 `
@@ -49,9 +49,9 @@ export default function PageSelect(props) {
         <Holder>
             <Line/>
             <BallHolder>
-                <Ball onClick={() => props.change(1)} selected={props.page === 1} ><h1>1</h1></Ball>
-                <Ball onClick={() => props.change(2)} selected={props.page === 2} ><h1>2</h1></Ball>
-                <Ball onClick={() => props.change(3)} selected={props.page === 3} ><h1>3</h1></Ball>
+                <Ball error={props.error.page1} onClick={() => props.change(1)} selected={props.page === 1} ><h2>1</h2></Ball>
+                <Ball error={props.error.page2} onClick={() => props.change(2)} selected={props.page === 2} ><h2>2</h2></Ball>
+                <Ball error={props.error.page3} onClick={() => props.change(3)} selected={props.page === 3} ><h2>3</h2></Ball>
             </BallHolder>
         </Holder>
     )

@@ -52,6 +52,8 @@ Route::group([
                 ],function() {
                     Route::post('/register', 'Api\AuthController@register');
                     Route::post('/login', 'Api\AuthController@login');
+                    Route::get('/account', 'Api\AuthController@show');
+                    Route::patch('/account', 'Api\AuthController@update');
                     Route::post('/{user}/assign/{role}', 'Api\RoleController@assignRole');
             });
 
