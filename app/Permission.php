@@ -4,6 +4,7 @@ namespace App;
 
 use App\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pipeline\Pipeline;
 
 class Permission extends Model
 {
@@ -26,6 +27,19 @@ class Permission extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
+    }
+
+
+    public static function allPermissions()
+    {
+        return $permissions = app(Pipeline::class)
+                    ->send(Permission::query())
+                    ->through([
+                        \App\QueryFilters\Active::class,
+                        \App\QueryFilters\Sort::class,
+                    ])
+                    ->thenReturn()
+                    ->paginate(15);
     }
 
 }

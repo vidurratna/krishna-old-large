@@ -26,7 +26,7 @@ class CreateRequest extends FormRequest
         return [
             'name' => 'required|max:30|min:2|unique:roles',
             'ident' => 'required|unique:roles',
-            'description' => 'required|min:35|max:300',
+            'description' => 'required|min:15|max:300',
             'active' => 'boolean',
             'level' => 'numeric'
         ];

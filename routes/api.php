@@ -68,7 +68,8 @@ Route::group([
                 ],function() {
                     Route::post('/{address}/assign', 'Api\AddressController@assign');
             });
-
+            Route::get('/admin/users', 'Api\AuthController@index');
+            Route::get('/admin/users/{user}', 'Api\AuthController@check');
         });
         
 
@@ -83,7 +84,7 @@ Route::group([
         Route::group([
             'prefix' => '/permission'
             ],function() {
-                Route::post('/{permission}/asign/{role}', 'Api\PermissionController@asignRole');
+                Route::post('/{permission}/assign/{role}', 'Api\PermissionController@asignRole');
         });
 
         

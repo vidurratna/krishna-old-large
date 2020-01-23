@@ -6,6 +6,7 @@ use App\Concerns\UsesUuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Pipeline\Pipeline;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -18,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'title', 'email', 'password', 'first_name', 'last_name', 'phone', 'role_id'
+        'title', 'email', 'password', 'first_name', 'last_name', 'phone', "date_of_birth"
     ];
 
     /**
@@ -41,7 +42,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','role_id'); 
+        return $this->belongsToMany(Role::class, 'user_role_chapter')->withPivot('user_id','chapter_id'); 
         //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
     }
 
@@ -59,5 +60,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Chapter::class, 'user_role_chapter')->withPivot('user_id','chapter_id','role_id'); 
         //'user_role_chapter', 'user_id', 'role_id', 'chapter_id'
+    }
+
+    public static function allUsers()
+    {
+        return $users = app(Pipeline::class)
+                    ->send(User::query())
+                    ->through([
+                        \App\QueryFilters\Sort::class,
+                        \App\QueryFilters\Chapter::class,
+                    ])
+                    ->thenReturn()
+                    ->paginate(15);
     }
 }

@@ -30,9 +30,15 @@ class Chapter extends Model
     {
         return $this->morphToMany('App\Address', 'addressable');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_role_chapter')->withPivot('user_id','chapter_id'); 
+    }
     
     public function display()
     {
         return "ERROR: contact admin - error in chapter displayer.";
     }
+    
 }

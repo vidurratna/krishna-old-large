@@ -336,7 +336,6 @@ import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import Address from '../../../Components/Inputs/Address';
 import { Error } from '../../../Components/Alerts';
 import { store } from 'react-notifications-component'
-import Axios from 'axios'
 import { api } from '../../../Services/Api';
 
 
@@ -424,7 +423,7 @@ export default class RegisterForm extends Component {
                 this.props.submit(res.data);
             })
             .catch(error => {
-                console.log("Error: " + error.response)
+                console.log(error.response)
                 switch(error.response.status){
                     case 422:
                         let errors = error.response.data.errors;

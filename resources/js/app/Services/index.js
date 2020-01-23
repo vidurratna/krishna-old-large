@@ -1,6 +1,7 @@
 import React from 'react'
 import Notify from './Notify'
 import { api } from './Api';
+import Modal from './Modal';
 
 export default function Services() {
 
@@ -23,6 +24,9 @@ export default function Services() {
     }
 
     return (
-        <Notify/>
+       <React.Fragment>
+            <Notify/>
+            <Modal/>
+       </React.Fragment>
     )
 }

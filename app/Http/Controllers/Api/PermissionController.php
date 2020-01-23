@@ -7,6 +7,7 @@ use App\Http\Requests\Permission\CreateRequest;
 use App\Permission;
 use App\Role;
 use App\User;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -27,7 +28,13 @@ class PermissionController extends Controller
     {
         //$this->authorize('krishna.permission.index');
 
-        return response(['data'=>Permission::all()]);
+        // $permissions = Permission::orderBy('created_at', 'desc')->get();
+
+        // return response(['data'=>$permissions]);
+
+        // return $pipeline->get();
+
+        return response(Permission::allPermissions());
     }
 
     /**
@@ -60,6 +67,8 @@ class PermissionController extends Controller
         //$this->authorize('krishna.permission.show');
 
         $permission = Permission::find($permission);
+        $permission['roles']= $permission->roles()->get();
+
 
         if($permission)
         {

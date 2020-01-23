@@ -6,6 +6,7 @@ use App\Address;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Role;
 use App\Services\ChapterManager;
 use App\User;
@@ -20,6 +21,11 @@ class AuthController extends Controller
     function __construct()
     {
         return $this->middleware('auth:api')->except('register','login');
+    }
+
+    public function index()
+    {
+        return User::allUsers();
     }
 
     public function register(RegisterRequest $request)
@@ -87,6 +93,30 @@ class AuthController extends Controller
         );
     }
 
+    public function check($user)
+    {
+        $user = User::find($user);
+        if($user)
+        {
+            $user->address;
+            $user->chapters;
+            $user->roles;
+            return $user;
+        }
+        else 
+        {
+            return response(['message'=>'Did not find a user matching that ID'],404);
+        }
+    }
+
+    public function update(UpdateRequest $request){
+        $user = Auth::user();
+        $user->update($request->all());
+        $user->save();
+
+        return $user;
+    }
+
     public function login(LoginRequest $request)
     {
         // $http = new Client;
@@ -112,6 +142,7 @@ class AuthController extends Controller
                 [
                     'token' => $success,
                     'user' => $user,
+                    'chapter' => app(ChapterManager::class)->getChapter(),
                 ], 200
             );
         } else {

@@ -11,6 +11,6 @@ class ChapterTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Chapter::class,25)->create();
+        factory(App\Chapter::class,5)->create();
     }
 }

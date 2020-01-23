@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Chapter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\CreateRequest;
 use App\Role;
@@ -26,7 +27,9 @@ class RoleController extends Controller
     {
         //$this->authorize('krishna.role.index');
 
-        return response(['data'=>Role::all()]);
+        // $roles = Role::orderBy('created_at', 'desc')->get();
+
+        return response(Role::allRoles());
     }
 
     /**
@@ -56,9 +59,15 @@ class RoleController extends Controller
      */
     public function show($role)
     {
-        //$this->authorize('krishna.role.show');
+        // $this->authorize('krishna.role.show');
 
         $role = Role::find($role);
+        $role['users']= $role->usersWithChapter()->get();
+        $role['permissions']= $role->permissions()->get();
+
+        foreach ($role['users'] as $user) {
+            $user['chapter'] = Chapter::find($user->pivot->chapter_id);
+        }
 
         if($role)
         {

@@ -9,7 +9,7 @@ $factory->define(Permission::class, function (Faker $faker) {
     return [
         'name'=>'Create Chapter Posts',
         'ident'=>'chapter.posts.store',
-        'description'=>'Creating posts for a chapter that a user is asigned too!',
+        'description'=>'Creating posts for a chapter that a user is assigned too!',
         'active'=>1,
     ];
 });
