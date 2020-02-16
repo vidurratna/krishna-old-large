@@ -10,10 +10,13 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Role;
 use App\Services\ChapterManager;
 use App\User;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class AuthController extends Controller
 {
@@ -33,7 +36,7 @@ class AuthController extends Controller
 
         $password = $request['password'];
         $request['password'] = bcrypt($request['password']);
-
+        $request['date_of_birth'] = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
         $user = User::create($request->all());
         $addressRequest = [
             'name' => $user->id,
@@ -68,6 +71,8 @@ class AuthController extends Controller
 
         if(Auth::attempt(['email' => $request->email, 'password' => $password])) {
             $user = Auth::user();
+            $user->address;
+            $user->chapters;
             $success = $user->createToken('Krishna')->accessToken;
             return response()->json(
                 [
@@ -86,6 +91,8 @@ class AuthController extends Controller
         $user = Auth::user();
         $user->address;
         $user->chapters;
+        $user['date_of_birth'] = Carbon::createFromFormat('Y-m-d', $user->date_of_birth)->format('d/m/Y');
+
         return response()->json(
             [
                 'user' => $user
@@ -110,11 +117,34 @@ class AuthController extends Controller
     }
 
     public function update(UpdateRequest $request){
+
         $user = Auth::user();
+        if($request['date_of_birth']){
+            $request['date_of_birth'] = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
+        }
+        if($request['isAddress']==="true"){
+            $address = Address::find($request->id);
+            $address->update($request->except(['isAddress', 'id']));
+            $address->save();
+        }
         $user->update($request->all());
         $user->save();
 
+        $user->address;
+        $user->chapters;
+
         return $user;
+    }
+
+    public function test() {
+        $process = new Process("google-chrome-stable --headless --disable-gpu --window-size=1024,1024 --screenshot ". "http://192.168.0.158:3000/");
+        $process->setTimeout(8000);
+        $process->setWorkingDirectory(storage_path('/app/public/'));
+        $process->run();
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+        return "something";
     }
 
     public function login(LoginRequest $request)
@@ -125,7 +155,7 @@ class AuthController extends Controller
         //     'form_params' => [
         //         'grant_type' => 'password',
         //         'client_id' => '2',
-        //         'client_secret' => 'dNr0hzx7j921No7m42tyJy7pH86vlViCTnFFpVYW',
+        //         'client_secret' => '',
         //         'username' => $request->email,
         //         'password' => $request->password,
         //         'scope' => '',

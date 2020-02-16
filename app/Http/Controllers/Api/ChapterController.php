@@ -15,7 +15,7 @@ class ChapterController extends Controller
 {
     function __construct()
     {
-        return $this->middleware('auth:api')->except('index','show');
+        return $this->middleware('auth:api')->except('index','show','me');
     }
     /**
      * Display a listing of the resource.

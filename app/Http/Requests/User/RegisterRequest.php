@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             'phone' => 'required|min:2',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:10|confirmed',
-            'date_of_birth' => 'required|date',
+            'date_of_birth' => 'required|date_format:Y/m/d',
             'address' => 'required|min:5',
             'city' => 'required|min:5',
             'region' => 'required|min:5',

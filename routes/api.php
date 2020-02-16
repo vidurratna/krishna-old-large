@@ -47,6 +47,8 @@ Route::group([
             Route::post('/join', 'Api\ChapterController@join');
             Route::post('/leave', 'Api\ChapterController@leave');
 
+            Route::get('/test', 'Api\AuthController@test');
+
             Route::group([
                 'prefix' => '/user'
                 ],function() {

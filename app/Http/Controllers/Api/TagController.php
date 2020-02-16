@@ -9,7 +9,6 @@ use App\Http\Requests\Tag\UpdateRequest;
 use App\Services\ChapterManager;
 use App\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -30,16 +29,11 @@ class TagController extends Controller
 
             //$this->authorize('admin.tags.index');
 
-            $tags = DB::table('tags')
-                    ->paginate(15);
-
-            return response($tags);
+            return response(Tag::allTags(true));
 
         } else {
 
-            $tags = Tag::orderBy('created_at','desc')->paginate(15);
-
-            return response(['data'=>$tags]);
+            return response(Tag::allTags(false));
         }
     }
 
